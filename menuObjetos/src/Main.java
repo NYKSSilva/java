@@ -132,11 +132,30 @@ public class Main {
     private static void CadastrarTurmas() {
         Periodo periodo = ValidarPeriodo();
         String curso = Leitura.dados("Digite o curso:");
-        if(!isCharacther(curso))
-            System.out.println("nome de curso invalido, digite apenas textos!");
+        while(!isCharacther(curso)) {
+            System.out.println("nome de curso invalido, utilize apenas letras!");
+            curso = Leitura.dados("Digite o curso:");
+        }
 
         String sigla = Leitura.dados("Digite a sigla:");
-        menuTurma();
+        boolean repetido = true;
+        while (sigla.isBlank() || !repetido) {
+            System.out.println("sigla invalida!");
+            sigla = Leitura.dados("Digite a sigla:");
+            sigla = sigla.toUpperCase();
+
+            for(Turma t: listaTurmas){
+                if(t.getSigla().equals(sigla)) {
+                    System.out.println("Turma já cadastrada");
+                    repetido = true;
+                }
+            }
+            repetido = false;
+        }
+
+        Turma turma = new Turma(curso, sigla, periodo);
+        listaTurmas.add(turma);
+       // menuTurma();
     }
 
     private static boolean isCharacther(String curso) {
