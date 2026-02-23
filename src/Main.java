@@ -125,23 +125,43 @@ public class Main {
             return;
         }
         for (Turma t : listaTurmas){
-            System.out.println(t);
+            System.out.println(t.toString());
         }
     }
 
     private static void CadastrarTurmas() {
         Periodo periodo = ValidarPeriodo();
         String curso = Leitura.dados("Digite o curso:");
-        if(!validarCurso(curso))
-            System.out.println("nome de curso invalido, digite apenas textos!");
+        while(!isCharacther(curso)) {
+            System.out.println("nome de curso invalido, utilize apenas letras!");
+            curso = Leitura.dados("Digite o curso:");
+        }
 
         String sigla = Leitura.dados("Digite a sigla:");
+        while(!validarSigla(sigla)){
+            System.out.println("Sigla invalida. Precisa ser texto e não repetida");
+            sigla = Leitura.dados("Digite a sigla:");
+    }
+        Turma turma = new Turma(curso, sigla, periodo);
+        listaTurmas.add(turma);
         menuTurma();
     }
 
-    private static boolean validarCurso(String curso) {
-        String cursoSemNumero = curso.replaceAll("\\d", " ");
-        return  !curso.isBlank() && curso.equals((cursoSemNumero));
+    private static boolean validarSigla(String sigla) {
+        if (sigla.isBlank()) return false;
+
+        for (Turma turma : listaTurmas) {
+            if (turma.getSigla().equals(sigla)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean isCharacther(String curso) {
+        String textoSemNumero = curso.replaceAll("\\d", " ");
+        return  !curso.isBlank() && curso.equals((textoSemNumero));
     }
 
     private static Periodo ValidarPeriodo(){
@@ -177,14 +197,37 @@ public class Main {
     }
 
     private static void ExcluirTurmas() {
-
+    listarTurmaSigla();
+    String opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
+    int opcaoValida = validarOpcao(opcao);
+    while (opcaoValida ==-1){
+        System.out.println("Opção inválida! Digite novamente");
+        opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
+         opcaoValida = validarOpcao(opcao);
+    }
+    listaTurmas.remove(opcaoValida);
     }
 
+    private static int validarOpcao(String opcao) {
+        if (opcao.isBlank()) return -1;
+        int opcaoNumero = -1;
+        try {
+           opcaoNumero = Integer.parseInt(opcao);
 
+        }catch (NumberFormatException e){
+            return -1;
+        }
 
+        int indiceLista = opcaoNumero-1;
+        return indiceLista>=0 && listaTurmas.size() > indiceLista? indiceLista: -1;
+    }
 
-
-
+    private static void listarTurmaSigla() {
+        System.out.println("\n==== Lista de turmas ====");
+        for (int i=0;i<listaTurmas.size(); i++){
+            System.out.printf("\n%d - %s",i+1, listaTurmas.get(i).getSigla());
+        }
+    }
 
 
 }
