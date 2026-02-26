@@ -102,32 +102,39 @@ public class Main {
                 break;
             case "2":
                 CadastrarTurmas();
+                menuTurma();
                 break;
             case "3":
                 AtualizarTurmas();
+                menuTurma();
                 break;
             case "4":
                 ExcluirTurmas();
+                menuTurma();
                 break;
             case "5":
                 menuPrincipal();
+                menuTurma();
                 break;
             default:
                 System.out.println("Opção invalida! Tente novamente!");
                 menuTurma();
         }
     }
-
+//LISTAR
     private static void listarTurmas() {
 
-        if (listaTurmas.isEmpty()) {
+        if (isVazio(listaTurmas)) {
             System.out.println("Não há turmas cadastradas.");
             return;
         }
         for (Turma t : listaTurmas){
-            System.out.println(t.toString());
+            if(t.isAtivo())
+            System.out.println(t);
         }
     }
+
+
 
     private static void CadastrarTurmas() {
         Periodo periodo = ValidarPeriodo();
@@ -193,19 +200,64 @@ public class Main {
 
     }
 
+    //ATUALIZAR
     private static void AtualizarTurmas() {
+
     }
 
+    //EXCLUIR
     private static void ExcluirTurmas() {
-    listarTurmaSigla();
-    String opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
-    int opcaoValida = validarOpcao(opcao);
-    while (opcaoValida ==-1){
-        System.out.println("Opção inválida! Digite novamente");
-        opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
-         opcaoValida = validarOpcao(opcao);
+        if (isVazio(listaTurmas)) {
+            System.out.println("Não há turmas cadastradas.");
+            return;
+        }
+        listarTurmaSigla();
+        String opcao = Leitura.dados("\nDigite o numero da turma que deseja excluir!");
+        int opcaoValida = -1;
+        int opcaoUsuario = -1;
+        while (opcaoValida ==-1){
+            opcaoUsuario = validarOpcao(opcao);
+            if(opcaoUsuario == -1){
+                System.out.println("Opção inválida! Digite novamente");
+                opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
+            } else{
+                opcaoValida = opcaoUsuario;
+            }
+        }
+        confirmaExclusao();
+
+        if (confirmaExclusao()) {
+            //listaTurmas.remove(opcaoUsuario);
+            listaTurmas.get(opcaoUsuario).setAtivo(false);
+            System.out.println("Turma excluida com sucesso!");
+        }else {
+            System.out.println("Operação cancelada!");
+        }
     }
-    listaTurmas.remove(opcaoValida);
+
+    private static boolean isVazio(ArrayList<Turma> listaTurmas) {
+        if (listaTurmas.isEmpty()) return true;
+
+        for (Turma turma: listaTurmas){
+            if (turma.isAtivo()) return false;
+        }
+        return true;
+    }
+
+    private static Boolean confirmaExclusao() {
+        String confirma = Leitura.dados("Você tem certeza? (S/N): ").toUpperCase();
+
+        while (true) {
+            switch (confirma) {
+                case "S":
+                    return true;
+                case "N":
+                    return false;
+                default:
+                    System.out.println("Opcao invalida. digite S para sim ou N para não.");
+                    break;
+            }
+        }
     }
 
     private static int validarOpcao(String opcao) {
@@ -225,11 +277,10 @@ public class Main {
     private static void listarTurmaSigla() {
         System.out.println("\n==== Lista de turmas ====");
         for (int i=0;i<listaTurmas.size(); i++){
+            if (listaTurmas.get(i).isAtivo())
             System.out.printf("\n%d - %s",i+1, listaTurmas.get(i).getSigla());
         }
     }
 
 
 }
-//
-//sla
