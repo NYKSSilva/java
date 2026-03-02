@@ -76,7 +76,33 @@ public class Main {
         }
     }
 
-    private static void CadastrarAluno() {
+  private static void CadastrarAluno() {
+//        String nome = Leitura.dados("Digite seu nome:");
+//        String curso = Leitura.dados("Digite o curso:");
+//        while(!isCharacther(curso)) {
+//            System.out.println("nome de curso invalido, utilize apenas letras!");
+//            curso = Leitura.dados("Digite o curso:");
+//        }
+//
+//        String sigla = Leitura.dados("Digite a sigla:");
+//        while(!validarSigla(sigla)){
+//            System.out.println("Sigla invalida. Precisa ser texto e não repetida");
+//            sigla = Leitura.dados("Digite a sigla:");
+//        }
+//        Aluno aluno = new Aluno(nome, nascimento, turma);
+//        listaAlunos.add(aluno);
+//        menuAlunos();
+//    }
+//
+//    }
+//
+//    private static void validarTurma() {
+//        if (isVazio(listaTurmas))
+//
+//            for (Turma t : listaTurmas){
+//                if(t.isAtivo())
+//                    System.out.println(t);
+//            }
     }
 
     private static void AtualizarAluno() {
@@ -134,8 +160,7 @@ public class Main {
         }
     }
 
-
-
+//CADASTRAR
     private static void CadastrarTurmas() {
         Periodo periodo = ValidarPeriodo();
         String curso = Leitura.dados("Digite o curso:");
@@ -202,7 +227,57 @@ public class Main {
 
     //ATUALIZAR
     private static void AtualizarTurmas() {
+        if (isVazio(listaTurmas)) {
+            System.out.println("Não há turmas cadastradas.");
+            return;
+        }
+        listarTurmaSigla();
+        int idAtualizar = validaIDTurma();
+//%s {String}, %d {int decimal}, %f {numeros float}
+//para juntar uma variavel com um texto em um sout {printf} conseguimos usar o %{e o tipo da variavel como %s para strings}
+//para juntar texto e uma variavel no println usamos +variavel+ {"blabla"+variavel+"blabla"}
+      Periodo periodo =  listaTurmas.get(idAtualizar).getPeriodo();
+      System.out.printf("O periodo atual é: %s ", periodo );
 
+     atualizarPeriodo(idAtualizar);
+    }
+
+    private static void atualizarPeriodo(int idAtualizar) {
+        boolean rodarNovamente = true;
+        while(rodarNovamente) {
+            String opcaoPeriodo = Leitura.dados("\nDeseja modificar o periodo? (s/n):").toUpperCase();
+            switch (opcaoPeriodo) {
+                case "S":
+                    //Periodo periodo = ValidarPeriodo();
+                    System.out.printf("O novo periodo é: %s", listaTurmas.get(idAtualizar).setPeriodo(ValidarPeriodo());
+
+                    rodarNovamente = false;
+                    break;
+                case "N":
+                    rodarNovamente = false;
+                    break;
+                default:
+                    System.out.println("Opção invalida, Escolha S para Sim ou N para Não");
+                    continue;
+            }
+            break;
+        }
+    }
+
+    private static int validaIDTurma() {
+        String opcao = Leitura.dados("\nDigite o numero da turma que desejada:");
+        int opcaoValida = -1;
+        int opcaoUsuario = -1;
+        while (opcaoValida ==-1){
+            opcaoUsuario = validarOpcaoTurmas(opcao);
+            if(opcaoUsuario == -1){
+                System.out.println("Opção inválida! Digite novamente");
+                opcao = Leitura.dados("Digite o numero da turma que desejada:");
+            } else{
+                opcaoValida = opcaoUsuario;
+            }
+        }
+        return opcaoValida;
     }
 
     //EXCLUIR
@@ -212,23 +287,12 @@ public class Main {
             return;
         }
         listarTurmaSigla();
-        String opcao = Leitura.dados("\nDigite o numero da turma que deseja excluir!");
-        int opcaoValida = -1;
-        int opcaoUsuario = -1;
-        while (opcaoValida ==-1){
-            opcaoUsuario = validarOpcao(opcao);
-            if(opcaoUsuario == -1){
-                System.out.println("Opção inválida! Digite novamente");
-                opcao = Leitura.dados("Digite o numero da turma que deseja excluir!");
-            } else{
-                opcaoValida = opcaoUsuario;
-            }
-        }
+       int idExcluir = validaIDTurma();
         confirmaExclusao();
 
         if (confirmaExclusao()) {
-            //listaTurmas.remove(opcaoUsuario);
-            listaTurmas.get(opcaoUsuario).setAtivo(false);
+            //listaTurmas.remove(idExcluir);
+            listaTurmas.get(idExcluir).setAtivo(false);
             System.out.println("Turma excluida com sucesso!");
         }else {
             System.out.println("Operação cancelada!");
@@ -260,7 +324,7 @@ public class Main {
         }
     }
 
-    private static int validarOpcao(String opcao) {
+    private static int validarOpcaoTurmas(String opcao) {
         if (opcao.isBlank()) return -1;
         int opcaoNumero = -1;
         try {
