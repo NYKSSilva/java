@@ -11,12 +11,12 @@ public class Turma {
         this.ativo = true;
     }
 //constructor default:
-    public Turma() {
-        this.curso = "";
-        this.sigla = "";
-        this.periodo = Periodo.MATUTINO;
-        this.ativo = true;
-    }
+//    public Turma() {
+//        this.curso = "";
+//        this.sigla = "";
+//        this.periodo = Periodo.MATUTINO;
+//        this.ativo = true;
+//    }
 
 
 
@@ -41,6 +41,7 @@ public class Turma {
     }
 
     public void setPeriodo(Periodo periodo) {this.periodo = periodo;}
+
     public boolean isAtivo() {return ativo;}
 
     public void setAtivo(boolean ativo) {this.ativo = ativo;}
